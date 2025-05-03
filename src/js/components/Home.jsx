@@ -112,9 +112,13 @@ const Home = () => {
 				<h1>To Do list</h1>
 				<form onSubmit={(event) => {
 					event.preventDefault();
+					if(newTask.trim().length > 0){event.preventDefault();
 					setTasks([newTask, ...tasks]);
 					enviarTarea();
-					setNewTask("")
+					setNewTask("")}
+					else{
+						alert("no estes enviando taread vacías,😠 escribe algo antes de enviar por favor")
+					}
 
 				}}>
 					<div className="input-group mb-3">
