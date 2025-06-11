@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 //create your first component
 const Home = () => {
-	
+
 	const [newTask, setNewTask] = useState("");
 	const [tasks, setTasks] = useState([]);
 
@@ -57,27 +57,27 @@ const Home = () => {
 
 	// }
 
-	const enviarTarea = async ()=>{
-		try{
-			const response = await fetch( "https://playground.4geeks.com/todo/todos/alisoneoz", {
+	const enviarTarea = async () => {
+		try {
+			const response = await fetch("https://playground.4geeks.com/todo/todos/alisoneoz", {
 				method: "POST",
 				body: JSON.stringify(
 					{
-						label:newTask,
-						is_done:false
+						label: newTask,
+						is_done: false
 					}
 				),
-				headers:{
-					"Content-Type":"application/json",
+				headers: {
+					"Content-Type": "application/json",
 				}
 			});
-			if (!response.ok){
+			if (!response.ok) {
 				throw Error(response.statusText)
 			}
 			const transform = await response.json()
 			console.log(transform.msg);
 			return transform
-		}catch(error){
+		} catch (error) {
 			console.log("error", error)
 		}
 	}
@@ -110,14 +110,15 @@ const Home = () => {
 		<div className="container-fluid bg-danger-subtle" style={{ height: "100vh" }}>
 			<div className="mx-auto pt-5" style={{ width: "50%" }}>
 				<h1>To Do list</h1>
-				<form onSubmit={(event) => {
+				<form onSubmit={async(event) => {
 					event.preventDefault();
-					if(newTask.trim().length > 0){event.preventDefault();
-					setTasks([newTask, ...tasks]);
-					enviarTarea();
-					setNewTask("")}
-					else{
-						alert("no estes enviando taread vacías,😠 escribe algo antes de enviar por favor")
+					if (newTask.trim().length > 0) {
+						await enviarTarea()						
+						await getTasks()
+						setNewTask("")
+					}
+					else {
+						alert("no estes enviando tareas vacías,😠 escribe algo antes de enviar por favor")
 					}
 
 				}}>
@@ -135,28 +136,27 @@ const Home = () => {
 
 				<div>
 					<h2>Task list:</h2>
-					
 
-						<div>
-							<ul className="list-group">
-								{tasks.map((task, index) => {
-									const { label, id } = task;
-									return (
-										<li key={index} className="el-elemento list-group-item d-flex justify-content-between">
-											{label}
-											<button type="button" className="btn btn-light"
-												onClick={() => {
-													setTasks(tasks.filter((task, indexFilter) => indexFilter != index))
-													deleteTask(id)
-												}}
-											>❌</button>
-										</li>)
-								})}
+					<div>
+						<ul className="list-group">
+							{tasks.map((task, index) => {
+								const { label, id } = task;
+								return (
+									<li key={index} className="el-elemento list-group-item d-flex justify-content-between">
+										{task.label}
+										<button type="button" className="btn btn-light"
+											onClick={() => {
+												setTasks(tasks.filter((task, indexFilter) => indexFilter != index))
+												deleteTask(id)
+											}}
+										>❌</button>
+									</li>)
+							})}
 
-							</ul>
-						</div>
+						</ul>
+					</div>
 
-					
+
 
 				</div>
 
